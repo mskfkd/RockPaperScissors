@@ -1,4 +1,16 @@
 <?php
+
+//プレイヤー入力の関数
+function getplayerHand() {
+	$typeHand = trim(fgets(STDIN));
+	$checkres = checkHand($typeHand);
+
+	if($checkres === true){
+		echo "あなたは" . $typeHand . "を出すのですね?";
+		return $typeHand;
+	}
+}
+
 //プレイヤー側のバリデーション
 function checkHand($inputHand){
 //空じゃないか?
@@ -16,134 +28,57 @@ function checkHand($inputHand){
 		return true;
 	}else {
 		return false;
+		return;
 	}
+
 }
 
 //PC側
-function masterHand() {
+function getComHand() {
 //PC側の手をランダムに選択
 	$selectHand = array("グー" , "チョキ" , "パー");
 	$ans = array_rand($selectHand);
 	return $selectHand[$ans];
 }
 
+//グーチョキパーを判定用数字に変換
+function convert($hand) {
+	$hand_list = array(
+		"グー" => 0 , 
+		"チョキ" => 1 ,
+		"パー" => 2
+	);
+	
+	return $hand_list[$hand];
+}
+
 //勝敗判定
-function judgeStone($inputHand) {
+function judge($playerchoice , $pcchoice) {
+	echo "PCは" . $pcchoice . "を出しました";
 
-		switch ($inputHand) {
+	//それぞれを数字に変換
+	$playerconv = convert($playerchoice);
+	$pcconv = convert($pcchoice);
 
-			case "グー":
-				$result = "あいこ";
-				break;
-			
-			case "チョキ":
-				$result = "負け";
-				break;
+	$judgeCalc = ($playerconv - $pcconv + 3) % 3;
+	
+	$judge_list = array(
+		0 => '引き分け',
+		1 => '負け',
+		2 => '勝ち'
+	);
 
-			case "パー":
-				$result = "勝ち";
-				break;
-		}
-
-		return $result;
-
-}
-
-function judgeScissor($inputHand) {
-
-		switch ($inputHand) {
-			
-			case "チョキ":
-				$result = "あいこ";
-				break;
-			
-			case "グー":
-				$result = "勝ち";
-				break;
-
-			case "パー":
-				$result = "負け";
-				break;
-		}
-
-		return $result;
-
-}
-
-function judgePaper($inputHand) {
-
-		switch ($inputHand) {
-			
-			case "パー":
-				$result = "あいこ";
-				break;
-			
-			case "チョキ":
-				$result = "勝ち";
-				break;
-
-			case "グー":
-				$result = "負け";
-				break;
-		}
-
-		return $result;
+	return $judge_list[$judgeCalc];
 
 }
 
 //勝負処理
 function  RockPaperScissors() {
-	$inputHand = trim(fgets(STDIN));
-	$key = masterHand();
-
-	echo "あなたは" . $inputHand . "を出すのですね?";
-
-	if($key === "グー") {
-
-			echo "PCは" . $key . "を出しました。" . "\n";
-			$checkans = checkHand($inputHand);
-
-		if($checkans === true) {
-
-			$judgeans = judgeStone($inputHand);
-			return $judgeans;
-
-		}else{
-
-			echo "エラーです。";
-			
-		}
-	}elseif ($key === "チョキ") {
-
-			echo "PCは" . $key . "を出しました。" . "\n";
-			$checkans = checkHand($inputHand);
-
-		if ($checkans === true) {
-
-			$judgeans = judgeScissor($inputHand);
-			return $judgeans;
-
-		}else{
-
-			echo "エラーです。";
-
-		}
-	}elseif ($key === "パー") {
-
-			echo "PCは" . $key . "を出しました。" . "\n";
-			$checkans = checkHand($inputHand);
-
-		if ($checkans === true) {
-
-			$judgeans = judgePaper($inputHand);
-			return $judgeans;
-
-		}else{
-
-			echo "エラーです。";
-
-		}
-	}
+	$inputHand = getplayerHand();
+	$pcHand = getComHand();
+	$result = judge($inputHand , $pcHand);
+	//結果を表示
+	return $result;
 }
 
 //見える側
