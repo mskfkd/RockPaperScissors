@@ -1,13 +1,16 @@
 <?php
 
 //プレイヤー入力の関数
-function getplayerHand() {
+function getPlayerHand() {
 	$typeHand = trim(fgets(STDIN));
 	$checkres = checkHand($typeHand);
 
 	if($checkres === true){
 		echo "あなたは" . $typeHand . "を出すのですね?";
 		return $typeHand;
+	}else {
+		echo "エラーです。再度入力し直してください。";
+		return getPlayerHand();
 	}
 }
 
@@ -28,7 +31,6 @@ function checkHand($inputHand){
 		return true;
 	}else {
 		return false;
-		return;
 	}
 
 }
@@ -42,43 +44,53 @@ function getComHand() {
 }
 
 //グーチョキパーを判定用数字に変換
-function convert($hand) {
-	$hand_list = array(
-		"グー" => 0 , 
-		"チョキ" => 1 ,
-		"パー" => 2
+class HandClass {
+	const STONE = 0;
+	const SCISSOR = 1;
+	const PAPPER = 2;
+
+	const HAND_LIST = array(
+		"グー" => STONE,
+		"チョキ" => SCISSOR,
+		"パー" => PAPPER
 	);
 	
-	return $hand_list[$hand];
 }
+
+class judgeClass {
+	const JUDGE_LIST = array(
+		0 => "引き分け",
+		1 => "負け",
+		2 => "勝ち"
+	);
+
+} 
 
 //勝敗判定
 function judge($playerchoice , $pcchoice) {
 	echo "PCは" . $pcchoice . "を出しました";
-
-	//それぞれを数字に変換
-	$playerconv = convert($playerchoice);
-	$pcconv = convert($pcchoice);
-
-	$judgeCalc = ($playerconv - $pcconv + 3) % 3;
 	
-	$judge_list = array(
-		0 => '引き分け',
-		1 => '負け',
-		2 => '勝ち'
-	);
+	$playerconv = HandClass::HAND_LIST[$playerchoice];
+	$pcconv = HandClass::HAND_LIST[$pcchoice];
 
-	return $judge_list[$judgeCalc];
+	$judgeCalc = ($playerconv - $pcconv + 3) %3;
 
+	return $judgeCalc;
+}
+
+//勝敗の返答
+function show($judgeCalc) {
+	$judgeRes = judgeClass::JUDGE_LIST[$judgeCalc];
+	return $judgeRes;
 }
 
 //勝負処理
 function  RockPaperScissors() {
-	$inputHand = getplayerHand();
+	$inputHand = getPlayerHand();
 	$pcHand = getComHand();
 	$result = judge($inputHand , $pcHand);
 	//結果を表示
-	return $result;
+	return show($result);
 }
 
 //見える側
