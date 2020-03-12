@@ -28,20 +28,6 @@ function checkHand($inputHand){
 		return false;
 	}
 
-//プレイヤーが出した手の確認
-	// if($inputHand === 0) {
-	// 	echo "あなたは" . HAND_LIST[STONE] . "を出すのですね?";
-	// 	return true;
-	// }elseif($inputHand === 1) {
-	// 	echo "あなたは" . HAND_LIST[SCISSOR] . "を出すのですね?";
-	// 	return true;
-	// }elseif($inputHand === 2) {
-	// 	echo "あなたは" . HAND_LIST[PAPPER] . "を出すのですね?";
-	// 	return true;
-	// }
-	// }else {
-	// 	return false;
-	// }
 	return true;
 }
 
@@ -50,7 +36,6 @@ function getComHand() {
 //PC側の手をランダムに選択
 	$selectHand = array(0, 1, 2);
 	$ans = array_rand($selectHand);
-	// $pcselect = HAND_LIST[$ans];
 	if($ans === 0) {
 		echo "PCは". HAND_LIST[STONE] ."を選びました。";
 		return $selectHand[$ans];
@@ -61,8 +46,7 @@ function getComHand() {
 		echo "PCは". HAND_LIST[PAPPER] ."を選びました。";
 		return $selectHand[$ans];
 	}
-	// echo "PCは" . $pcselect . "を選びました" . "\n";
-	// return $pcselect;
+	
 }
 
 //グーチョキパーを判定用数字に変換
@@ -82,6 +66,9 @@ const JUDGE_LIST = array(
 	2 => "勝ち"
 );
 
+const YES = "y";
+const NO = "n";
+
 //勝敗判定
 function judge($playerchoice , $pcchoice) {
 
@@ -93,21 +80,56 @@ function judge($playerchoice , $pcchoice) {
 //勝敗の返答
 function show($judgeCalc) {
 	$judgeRes = JUDGE_LIST[$judgeCalc];
-	return $judgeRes;
+	echo "あなたは" . $judgeRes . "です。" . "\n";
 }
 
 //勝負処理
-function  RockPaperScissors() {
+function RockPaperScissors() {
 	$inputHand = getPlayerHand();
 	$pcHand = getComHand();
 	$result = judge($inputHand , $pcHand);
 	//結果を表示
-	return show($result);
+	$judge = show($result);
+	echo $judge;
+
+	$playerReplay = replay();
+
+	if($playerReplay === "y") {
+		echo "それでは、0:グー、1:チョキ、2:パーとして、いずれか入力してください。" . "\n";
+		return RockPaperScissors();
+	}elseif ($playerReplay === "n") {
+		echo "それではこれにて、じゃんけんゲームを終了します。" . "\n";
+		return;
+	}
+}
+
+function replay() {
+	
+	echo "もう1回やりますか? y:はい、n:いいえで入力してください" . "\n";
+	$playerRes = trim(fgets(STDIN));
+
+	//バリデーション
+	//空じゃないか
+	if (!isset($playerRes)) {
+		echo "もう1度入力して下さい";
+		return false;
+	}
+
+	//yかnかを入力してるか
+	if($playerRes === "y") {
+		return $playerRes;
+	}elseif($playerRes === "n"){
+		return $playerRes;
+	}else {
+		echo "y:はい、n:いいえで入力してください" . "\n";
+		return false;
+	}
+
 }
 
 //見える側
 echo "じゃんけんをしましょう。0:グー、1:チョキ、2:パーとして、いずれか入力してください。" . "\n";
 $player = RockPaperScissors();
-echo "あなたは" . $player . "です。" . "\n";
 
 ?>
+
