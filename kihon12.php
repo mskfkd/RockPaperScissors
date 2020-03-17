@@ -94,10 +94,10 @@ function RockPaperScissors() {
 
 	$playerReplay = replay();
 
-	if($playerReplay === "y") {
+	if($playerReplay === YES) {
 		echo "それでは、0:グー、1:チョキ、2:パーとして、いずれか入力してください。" . "\n";
 		return RockPaperScissors();
-	}elseif ($playerReplay === "n") {
+	}elseif ($playerReplay === NO) {
 		echo "それではこれにて、じゃんけんゲームを終了します。" . "\n";
 		return;
 	}
@@ -112,17 +112,15 @@ function replay() {
 	//空じゃないか
 	if (!isset($playerRes)) {
 		echo "もう1度入力して下さい";
-		return false;
+		return replay();
 	}
 
 	//yかnかを入力してるか
-	if($playerRes === "y") {
-		return $playerRes;
-	}elseif($playerRes === "n"){
+	if($playerRes === YES || $playerRes === NO) {
 		return $playerRes;
 	}else {
 		echo "y:はい、n:いいえで入力してください" . "\n";
-		return false;
+		return replay();
 	}
 
 }
