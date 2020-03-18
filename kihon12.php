@@ -66,6 +66,7 @@ const JUDGE_LIST = array(
 	2 => "勝ち"
 );
 
+//続けるか否かの返事用
 const YES = "y";
 const NO = "n";
 
